@@ -1,69 +1,39 @@
-using System;
 using Newtonsoft.Json;
 
 namespace WeatherApp.Data
 {
-    /// <summary>
-    /// Main weather data structure matching OpenWeatherMap API response
-    /// TODO: Students will complete the JsonProperty attributes
-    /// </summary>
-    [Serializable]
     public class WeatherData
     {
-        // TODO: Add JsonProperty attribute for "main"
-        public MainWeatherInfo Main { get; set; }
-        
-        // TODO: Add JsonProperty attribute for "weather"
-        public WeatherDescription[] Weather { get; set; }
-        
-        // TODO: Add JsonProperty attribute for "name"
+        [JsonProperty("name")]
         public string CityName { get; set; }
-        
-        // TODO: Add JsonProperty attribute for "cod"
-        public int StatusCode { get; set; }
-        
-        // Helper properties for easier data access
-        public float TemperatureInCelsius => Main?.Temperature - 273.15f ?? 0f;
-        public string PrimaryDescription => Weather?.Length > 0 ? Weather[0].Description : "Unknown";
-        
-        // Validation method
-        public bool IsValid => StatusCode == 200 && Main != null && !string.IsNullOrEmpty(CityName);
+
+        [JsonProperty("main")]
+        public MainData Main { get; set; }
+
+        [JsonProperty("weather")]
+        public WeatherDescription[] Weather { get; set; }
+
+        // Returnerar temperatur i Celsius
+        public float TemperatureInCelsius => Main?.Temp ?? 0f;
+
+        // Returnerar första väderbeskrivningen
+        public string PrimaryDescription => Weather != null && Weather.Length > 0
+            ? Weather[0].Description
+            : "No description";
+
+        // Används för att kontrollera om datan är giltig
+        public bool IsValid => !string.IsNullOrEmpty(CityName) && Weather != null && Main != null;
     }
 
-    /// <summary>
-    /// Main weather information (temperature, humidity, etc.)
-    /// TODO: Students will complete the JsonProperty attributes
-    /// </summary>
-    [Serializable]
-    public class MainWeatherInfo
+    public class MainData
     {
-        // TODO: Add JsonProperty attribute for "temp"
-        public float Temperature { get; set; }
-        
-        // TODO: Add JsonProperty attribute for "feels_like"
-        public float FeelsLike { get; set; }
-        
-        // TODO: Add JsonProperty attribute for "humidity"
-        public int Humidity { get; set; }
-        
-        // TODO: Add JsonProperty attribute for "pressure"
-        public int Pressure { get; set; }
+        [JsonProperty("temp")]
+        public float Temp { get; set; }
     }
 
-    /// <summary>
-    /// Weather description information
-    /// TODO: Students will complete the JsonProperty attributes
-    /// </summary>
-    [Serializable]
     public class WeatherDescription
     {
-        // TODO: Add JsonProperty attribute for "main"
-        public string Main { get; set; }
-        
-        // TODO: Add JsonProperty attribute for "description"
+        [JsonProperty("description")]
         public string Description { get; set; }
-        
-        // TODO: Add JsonProperty attribute for "icon"
-        public string Icon { get; set; }
     }
 }

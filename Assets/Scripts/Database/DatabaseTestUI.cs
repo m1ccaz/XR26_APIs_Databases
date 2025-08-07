@@ -6,7 +6,6 @@ using Databases;
 
 namespace Databases.UI
 {
-    /// Simple UI controller for testing database functionality
     public class DatabaseTestUI : MonoBehaviour
     {
         [Header("UI References")]
@@ -24,7 +23,6 @@ namespace Databases.UI
 
         private void SetupUI()
         {
-            // TODO: Students will connect these button events
             if (addHighScoreButton != null)
                 addHighScoreButton.onClick.AddListener(OnAddHighScore);
 
@@ -34,7 +32,6 @@ namespace Databases.UI
             if (clearDataButton != null)
                 clearDataButton.onClick.AddListener(OnClearData);
 
-            // Set default values
             if (playerNameInput != null)
                 playerNameInput.text = "TestPlayer";
 
@@ -44,7 +41,6 @@ namespace Databases.UI
             UpdateDisplay("Database Test UI Ready\nClick buttons to test database operations");
         }
 
-        /// TODO: Students will implement this method
         private void OnAddHighScore()
         {
             try
@@ -54,11 +50,10 @@ namespace Databases.UI
 
                 if (int.TryParse(scoreText, out int score))
                 {
-                    // TODO: Use GameDataManager to add the high score
+                    GameDataManager.Instance.AddHighScore(playerName, score);
 
                     UpdateDisplay($"High score added: {playerName} - {score} points");
 
-                    // Generate random score for next test
                     if (scoreInput != null)
                         scoreInput.text = Random.Range(500, 2000).ToString();
                 }
@@ -73,14 +68,11 @@ namespace Databases.UI
             }
         }
 
-        /// TODO: Students will implement this method
         private void OnShowHighScores()
         {
             try
             {
-                // TODO: Use GameDataManager to get high scores
-
-                var scores = new List<HighScore>(); // Placeholder - students will replace this
+                var scores = GameDataManager.Instance.GetTopHighScores();
 
                 if (scores.Count == 0)
                 {
@@ -88,13 +80,13 @@ namespace Databases.UI
                 }
                 else
                 {
-                    string displayText = "Top High Scores:\n";
+                    string text = "Top High Scores:\n";
                     for (int i = 0; i < scores.Count; i++)
                     {
                         var score = scores[i];
-                        displayText += $"{i + 1}. {score.PlayerName}: {score.Score} pts\n";
+                        text += $"{i + 1}. {score.PlayerName}: {score.Score} pts\n";
                     }
-                    UpdateDisplay(displayText);
+                    UpdateDisplay(text);
                 }
             }
             catch (System.Exception ex)
@@ -103,13 +95,11 @@ namespace Databases.UI
             }
         }
 
-        /// TODO: Students will implement this method
         private void OnClearData()
         {
             try
             {
-                // TODO: Use GameDataManager to clear all high scores
-
+                GameDataManager.Instance.ClearAllHighScores();
                 UpdateDisplay("All high scores cleared from database");
             }
             catch (System.Exception ex)
@@ -121,9 +111,7 @@ namespace Databases.UI
         private void UpdateDisplay(string message)
         {
             if (displayText != null)
-            {
                 displayText.text = message;
-            }
         }
     }
 }
